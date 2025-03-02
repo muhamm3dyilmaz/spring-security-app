@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.spring_security_app.model.User;
+import com.project.spring_security_app.service.JwtService;
 import com.project.spring_security_app.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private JwtService jwtService;
+
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -32,7 +37,7 @@ public class UserController {
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if (authentication.isAuthenticated()) {
-            return "Login Success!";
+            return jwtService.generateToken(user.getUsername());
         } else {
             return "Login Failed!";
         }
